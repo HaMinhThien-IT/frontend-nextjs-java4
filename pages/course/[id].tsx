@@ -1,10 +1,13 @@
 import { Box, Button, Grid, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import KeyCourse from '../../src/components/key-course/KeyCourse';
 import UserLayout from '../../src/components/layout-user/UserLayout';
 import { courseController } from '../../src/controller/CourseController';
 import { getIdFromNameId } from '../../src/helper/helper';
+import useLocalStorage from '../../src/hook/useLocalStorage';
+import { Cart } from '../../src/model/Cart';
 import { Course } from '../../src/model/Course';
 
 type Props = {};
@@ -28,6 +31,22 @@ export default function DetailCourse({}: Props) {
   }, [id]);
   const arr = state.course.content.split('<p>');
   const arrr = arr.filter((item) => item != '');
+
+  const uuidCart = uuidv4();
+  const keyLocal: string = `cart-${uuidCart}`;
+  const [cart, setCart] = useLocalStorage(keyLocal, {});
+  const addToCart = () => {
+    const itemCart: Cart = {
+      idCart: uuidCart,
+      idCourse: state.course.idCourse,
+      idUser: 12,
+      imageCourse: state.course.imageCourse,
+      price: 799000,
+      title: state.course.title,
+    };
+    setCart(itemCart);
+  };
+
   return (
     <Box pt={3} pl={5} pb={5} pr={5}>
       <Grid container direction="row" justifyContent="center" alignItems="flex-start" lg={12}>
@@ -203,6 +222,7 @@ export default function DetailCourse({}: Props) {
                 Miễn phí
               </Box>
               <button
+                onClick={() => addToCart()}
                 style={{
                   background: 'rgb(240,81,35)',
                   marginTop: '16px',
