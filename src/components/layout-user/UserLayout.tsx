@@ -1,4 +1,5 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, useContext } from 'react';
+import { authContext } from '../../store/Auth';
 import Layout from './Layout';
 
 type Props = {

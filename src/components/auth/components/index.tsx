@@ -10,6 +10,8 @@ type props = {
   loginChua: JSX.Element;
   stackProps: JSX.Element;
   button: string;
+  event: () => void;
+  linked: string;
 };
 export default function AuthComponent(props: props) {
   return (
@@ -58,6 +60,7 @@ export default function AuthComponent(props: props) {
           {props.stackProps}
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
             <button
+              onClick={() => props.event()}
               style={{
                 padding: '10px 16px',
                 width: '100%',
@@ -74,7 +77,7 @@ export default function AuthComponent(props: props) {
             </button>
           </Stack>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-            <Link href={'/'}>
+            <Link href={`/${props.linked}`}>
               <a>{props.loginChua}</a>
             </Link>
           </Stack>

@@ -1,14 +1,17 @@
 import { Box, Button, Grid, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 import KeyCourse from '../../src/components/key-course/KeyCourse';
 import UserLayout from '../../src/components/layout-user/UserLayout';
 import { courseController } from '../../src/controller/CourseController';
 import { getIdFromNameId } from '../../src/helper/helper';
-import useLocalStorage from '../../src/hook/useLocalStorage';
+import useLocalStorage, { parseJSON } from '../../src/hook/useLocalStorage';
 import { Cart } from '../../src/model/Cart';
 import { Course } from '../../src/model/Course';
+import { authContext } from '../../src/store/Auth';
+import { cartContext } from '../../src/store/Cart';
 
 type Props = {};
 type State = {
@@ -29,22 +32,51 @@ export default function DetailCourse({}: Props) {
       });
     }
   }, [id]);
+  const { getMe } = useContext(authContext);
   const arr = state.course.content.split('<p>');
   const arrr = arr.filter((item) => item != '');
 
   const uuidCart = uuidv4();
-  const keyLocal: string = `cart-${uuidCart}`;
-  const [cart, setCart] = useLocalStorage(keyLocal, {});
+  const keyLocal: string = `cart-${getMe.idUser}`;
+  let x = Math.floor(Math.random() * 10000 + 1);
+  const itemCart: Cart = {
+    idCart: uuidCart,
+    idCourse: state.course.idCourse,
+    idUser: 12,
+    imageCourse: state.course.imageCourse,
+    price: x + x * 230,
+    title: state.course.title,
+  };
+  const { onListCart } = useContext(cartContext);
+
   const addToCart = () => {
-    const itemCart: Cart = {
-      idCart: uuidCart,
-      idCourse: state.course.idCourse,
-      idUser: 12,
-      imageCourse: state.course.imageCourse,
-      price: 799000,
-      title: state.course.title,
-    };
-    setCart(itemCart);
+    if (getMe.idUser >= 1) {
+      let check = false;
+      const itemCarts: Cart[] = parseJSON(localStorage.getItem(keyLocal)) || [];
+      for (let i = 0; i < itemCarts.length; i++) {
+        if (itemCarts[i]?.idCourse === itemCart.idCourse) {
+          check = true;
+        } else {
+          check = false;
+        }
+      }
+      if (!check) {
+        itemCarts.push(itemCart);
+        localStorage.setItem(keyLocal, JSON.stringify(itemCarts));
+        onListCart();
+        toast.success('Mua thành công ', {
+          position: 'top-center',
+          autoClose: 3000,
+        });
+      } else {
+        toast.error('Bạn đã mua khóa học này rồi mà ? ', {
+          position: 'top-center',
+          autoClose: 3000,
+        });
+      }
+    } else {
+      router.push('/login');
+    }
   };
 
   return (

@@ -2,7 +2,7 @@ import { Box, Grid, Stack } from '@mui/material';
 import React from 'react';
 import UserLayout from '../../src/components/layout-user/UserLayout';
 import { BiBookAlt } from 'react-icons/bi';
-import { FiBookOpen } from 'react-icons/fi';
+import { AiOutlineCode, AiOutlineCodepenCircle, AiOutlineMacCommand } from 'react-icons/ai';
 export default function ListOrder() {
   return (
     <Grid pt={2} container direction="row" justifyContent="space-between" alignItems="flex-start">
@@ -46,12 +46,11 @@ export default function ListOrder() {
               cursor: 'pointer',
             }}
           >
-            {' '}
             Khu vực học tập
           </Box>
         </Stack>
         <Stack p={3} pt={0} direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
-          <BiBookAlt fontSize={'25px'} color="#273167" />
+          <AiOutlineMacCommand fontSize={'25px'} color="#273167" />
           <Box
             sx={{
               color: '#273167',
@@ -61,12 +60,11 @@ export default function ListOrder() {
               cursor: 'pointer',
             }}
           >
-            {' '}
             Thành viên vàng
           </Box>
         </Stack>
         <Stack p={3} pt={0} direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
-          <BiBookAlt fontSize={'25px'} color="#273167" />
+          <AiOutlineCode fontSize={'25px'} color="#273167" />
           <Box
             sx={{
               color: '#273167',
@@ -76,12 +74,11 @@ export default function ListOrder() {
               cursor: 'pointer',
             }}
           >
-            {' '}
             Kích hoạt mã
           </Box>
         </Stack>
         <Stack p={3} pt={0} direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
-          <BiBookAlt fontSize={'25px'} color="#273167" />
+          <AiOutlineCodepenCircle fontSize={'25px'} color="#273167" />
           <Box
             sx={{
               color: '#273167',
@@ -91,7 +88,6 @@ export default function ListOrder() {
               cursor: 'pointer',
             }}
           >
-            {' '}
             Nhận hộ trợ
           </Box>
         </Stack>
@@ -107,7 +103,6 @@ export default function ListOrder() {
             cursor: 'pointer',
           }}
         >
-          {' '}
           Khu vực học tập
         </Box>
         <Box
@@ -184,7 +179,7 @@ export default function ListOrder() {
                     }}
                   >
                     Ngày đăng ký
-                  </span>{' '}
+                  </span>
                   : 02-02-2002
                 </Box>
                 <Box

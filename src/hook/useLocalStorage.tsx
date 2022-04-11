@@ -16,7 +16,6 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
     if (typeof window === 'undefined') {
       return initialValue;
     }
-
     try {
       const item = window.localStorage.getItem(key);
       return item ? (parseJSON(item) as T) : initialValue;
@@ -57,9 +56,10 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
   return [storedValue, setValue];
 }
 export default useLocalStorage;
-function parseJSON<T>(value: string | null): T | undefined {
+
+export function parseJSON<T>(value: string | null): T | undefined {
   try {
-    return value === 'undefined' ? undefined : JSON.parse(value ?? '');
+    return value !== null ? JSON.parse(value ?? '') : undefined;
   } catch {
     console.log('parsing error on', { value });
     return undefined;

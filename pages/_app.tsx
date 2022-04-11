@@ -10,6 +10,8 @@ import { muiTheme } from '../src/theme/MuiTheme';
 import createEmotionCache from '../src/theme/CreateEmotionCache';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CartContext from '../src/store/Cart';
+import AuthContext from '../src/store/Auth';
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
@@ -51,7 +53,11 @@ const MyApp: React.FunctionComponent<AppPropsWithLayout> = (props) => {
         />
       </Head>
       <ToastContainer />
-      <Box>{getLayout(<Component {...pageProps} />)}</Box>
+      <AuthContext>
+        <CartContext>
+          <Box>{getLayout(<Component {...pageProps} />)}</Box>
+        </CartContext>
+      </AuthContext>
     </CacheProvider>
   );
 };
