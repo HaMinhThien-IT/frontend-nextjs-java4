@@ -5,7 +5,13 @@ import { cartContext } from '../../src/store/Cart';
 import { formatMoney } from '../../src/helper/format';
 import Link from 'next/link';
 import { authContext } from '../../src/store/Auth';
+import { orderController } from '../../src/controller/OrderController';
+import { OrderCourse, Orders } from '../../src/model/Order';
+import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 export default function Cart() {
+  const router = useRouter();
   const { listCart, onListCart } = useContext(cartContext);
   const { getMe } = useContext(authContext);
   const removeItem = (index: number) => {
@@ -14,6 +20,41 @@ export default function Cart() {
     listCart.splice(index, 1);
     localStorage.setItem(keyLocal, JSON.stringify(listCart));
     onListCart();
+  };
+  const checkout = () => {
+    const user_id = getMe.idUser;
+    const keyLocal: string = `cart-${user_id}`;
+    const order: Orders = {
+      idOrders: uuidv4(),
+      timeOrder: '',
+      status: 1,
+      idUser: Number(getMe.idUser),
+      paymentMethods: 'Viettel Pay',
+      bankNumber: 56,
+    };
+
+    orderController
+      .addOrder(order)
+      .then(() => {
+        for (let i = 0; i < listCart.length; i++) {
+          const orderCourse: OrderCourse = {
+            idOrders: order.idOrders,
+            idOrderCourse: uuidv4(),
+            idCourse: Number(listCart[i].idCourse),
+            priceCourseOrder: Number(listCart[i].price),
+          };
+          orderController.addOrderCourse(orderCourse);
+        }
+      })
+      .then(() => {
+        toast.success('Thanh toán thành công', {
+          position: 'top-center',
+          autoClose: 3000,
+        });
+        localStorage.removeItem(keyLocal);
+        onListCart();
+        router.push('/list-order');
+      });
   };
   return (
     <Stack mt={2} direction="column" justifyContent="center" alignItems="center" spacing={2}>
@@ -114,6 +155,7 @@ export default function Cart() {
         ))}
       {listCart.length >= 1 ? (
         <button
+          onClick={() => checkout()}
           style={{
             background: 'rgb(240,81,35)',
             marginTop: '16px',

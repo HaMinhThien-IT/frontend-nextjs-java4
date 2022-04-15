@@ -6,7 +6,7 @@ import { authContext } from '../../src/store/Auth';
 import { useRouter } from 'next/router';
 
 export default function Register() {
-  const { onGetMe, getMe } = useContext(authContext);
+  const { getMe } = useContext(authContext);
   const router = useRouter();
   const register = () => {
     console.log('hihi');
