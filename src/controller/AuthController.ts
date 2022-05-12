@@ -13,11 +13,17 @@ class AuthController {
       return res.data;
     });
   }
+  register(user: User) {
+    return axios.post(`${localHost}/register`, user).then((res) => {
+      return res.data;
+    });
+  }
   getListUser() {
     return axios.get(`${localHost}/users`).then((res) => {
       return res.data as User[];
     });
   }
+
   editUser(user: User) {
     return axios.put(`${localHost}/user/${user.idUser}`, user);
   }

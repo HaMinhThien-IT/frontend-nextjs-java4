@@ -58,24 +58,36 @@ export default function Category({}: Props) {
     });
   };
   const onAdd = (course: Course) => {
-    if (course.idCourse != 0) {
-      courseController.editCourse(course).then(() => {
-        handleClose();
-        toast.success('Sửa sản phẩm thành công', {
-          position: 'top-center',
-          autoClose: 3000,
-        });
-        loadData();
+    if (
+      course.title.length < 1 ||
+      course.imageCourse.length < 1 ||
+      course.description.length < 1 ||
+      course.content.length < 1
+    ) {
+      toast.error('Vui lòng nhập đủ tất cả trường !!!', {
+        position: 'top-right',
+        autoClose: 3000,
       });
     } else {
-      courseController.addCourse(course).then(() => {
-        handleClose();
-        toast.success('Thêm sản phẩm thành công', {
-          position: 'top-center',
-          autoClose: 3000,
+      if (course.idCourse != 0) {
+        courseController.editCourse(course).then(() => {
+          handleClose();
+          toast.success('Sửa sản phẩm thành công', {
+            position: 'top-center',
+            autoClose: 3000,
+          });
+          loadData();
         });
-        loadData();
-      });
+      } else {
+        courseController.addCourse(course).then(() => {
+          handleClose();
+          toast.success('Thêm sản phẩm thành công', {
+            position: 'top-center',
+            autoClose: 3000,
+          });
+          loadData();
+        });
+      }
     }
   };
   const onSetData = (course: Course) => {

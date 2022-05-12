@@ -16,7 +16,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { v4 as uuidv4 } from 'uuid';
-import { Editor } from '@tinymce/tinymce-react';
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',

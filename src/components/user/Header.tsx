@@ -1,6 +1,6 @@
 import { Avatar, Box, Grid, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import Badge from '@mui/material/Badge';
 import { BsBellFill } from 'react-icons/bs';
@@ -17,11 +17,17 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { authContext } from '../../store/Auth';
 import { useRouter } from 'next/router';
+import { Post } from '../../model/Post';
+import { postController } from '../../controller/PostController';
+import { toast } from 'react-toastify';
 
 type Props = {};
-
+type State = {
+  post: Post;
+};
 export default function Header({}: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [state, setState] = useState<State>({ post: {} as Post });
   const router = useRouter();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -36,6 +42,33 @@ export default function Header({}: Props) {
     localStorage.removeItem('user');
     onGetMe();
     router.push('/');
+  };
+  const onNewPost = () => {
+    const postTemp: Post = {
+      idPost: 0,
+      idUser: String(getMe.idUser),
+      content: JSON.stringify(localStorage.getItem('content')),
+      image: '',
+      date: '',
+    };
+    postController.addNewPost(postTemp).then(() => {
+      getListPost();
+      toast.success('Đăng bài thành công ', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+      router.push('/');
+    });
+  };
+  console.log(state.post);
+
+  useEffect(() => {
+    getListPost();
+  }, []);
+  const getListPost = () => {
+    postController.getListPost().then((res) => {
+      setState({ ...state, post: res });
+    });
   };
   return (
     <Grid
@@ -69,27 +102,54 @@ export default function Header({}: Props) {
         </Stack>
       </Grid>
       <Grid item lg={4}>
-        <Stack
-          sx={{
-            border: '1px solid #ddd',
-            padding: '10px',
-            borderRadius: '20px',
-          }}
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="center"
-        >
-          <FiSearch fontSize={'20px'} />
-          <input
-            style={{ border: 0, outline: 0, width: '100%' }}
-            placeholder="Tìm kiếm khóa học, bài viết , video ..."
-          ></input>
-        </Stack>
+        {router.pathname == '/post' ? (
+          <></>
+        ) : (
+          <Stack
+            sx={{
+              border: '1px solid #ddd',
+              padding: '10px',
+              borderRadius: '20px',
+            }}
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            <FiSearch fontSize={'20px'} />
+            <input
+              style={{ border: 0, outline: 0, width: '100%' }}
+              placeholder="Tìm kiếm khóa học, bài viết , video ..."
+            ></input>
+          </Stack>
+        )}
       </Grid>
       <Grid container justifyContent="right" item lg={4}>
         <>
           {getMe.imgUser.length > 1 ? (
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+              {router.pathname == '/post' ? (
+                <button
+                  onClick={() => onNewPost()}
+                  style={{
+                    marginRight: '10px',
+                    border: 'none',
+                    padding: '6px 16px',
+                    background: '#f05123',
+                    borderRadius: '20px',
+                    fontFamily: 'Montserrat ',
+                    color: '#FFFFFF',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    lineHeight: '16px',
+                    fontWeight: 500,
+                  }}
+                >
+                  Xuất bản
+                </button>
+              ) : (
+                <></>
+              )}
+
               <Box
                 sx={{
                   color: '#000000',

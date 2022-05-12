@@ -32,6 +32,7 @@ export default function ListOrder() {
       setState({ ...state, listOrder: res, total: totalTemp });
     });
   }, [getMe.idUser]);
+
   const [page, setPage] = React.useState(1);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);

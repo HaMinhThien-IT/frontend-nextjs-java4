@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CartContext from '../src/store/Cart';
 import AuthContext from '../src/store/Auth';
+import Postcontext from '../src/store/Post';
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
@@ -55,7 +56,9 @@ const MyApp: React.FunctionComponent<AppPropsWithLayout> = (props) => {
       <ToastContainer />
       <AuthContext>
         <CartContext>
-          <Box>{getLayout(<Component {...pageProps} />)}</Box>
+          <Postcontext>
+            <Box>{getLayout(<Component {...pageProps} />)}</Box>
+          </Postcontext>
         </CartContext>
       </AuthContext>
     </CacheProvider>

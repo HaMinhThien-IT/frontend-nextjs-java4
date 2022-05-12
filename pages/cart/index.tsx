@@ -52,8 +52,8 @@ export default function Cart() {
           autoClose: 3000,
         });
         localStorage.removeItem(keyLocal);
-        onListCart();
         router.push('/list-order');
+        onListCart();
       });
   };
   return (

@@ -1,4 +1,5 @@
 import { Box, Grid } from '@mui/material';
+import { useRouter } from 'next/router';
 import React, { ReactElement, ReactNode } from 'react';
 import Footer from '../user/Footer';
 import Header from '../user/Header';
@@ -9,20 +10,23 @@ type Props = {
 };
 
 export const Layout = (props: Props) => {
+  const router = useRouter();
+  console.log(router.pathname);
+
   return (
     <Box>
       <Header />
       <Box
         sx={{
           padding: '10px',
-          minHeight: 'calc(100vh - 100px)',
+          minHeight: 'calc(100vh - 70px)',
         }}
       >
         <Grid container direction="row" justifyContent="space-between" alignItems="flex-start" lg={12}>
-          <Grid item lg={0.6}>
-            <MenuUser />
+          <Grid item lg={String(router.pathname) == '/post' ? 0 : 0.6}>
+            {String(router.pathname) == '/post' ? <></> : <MenuUser />}
           </Grid>
-          <Grid item lg={11.2}>
+          <Grid item lg={String(router.pathname) == '/post' ? 12 : 11.2}>
             {props.children}
           </Grid>
         </Grid>
