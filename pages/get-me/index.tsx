@@ -155,7 +155,28 @@ export default function GetMe() {
           >
             Full name : {getMe.name}
           </Box>
-
+          <Box
+            sx={{
+              color: '#444655',
+              fontSize: '16px',
+              lineHeight: '24px',
+              fontWeight: 400,
+              cursor: 'pointer',
+            }}
+          >
+            Birth day : 02/02/2002
+          </Box>
+          <Box
+            sx={{
+              color: '#444655',
+              fontSize: '16px',
+              lineHeight: '24px',
+              fontWeight: 400,
+              cursor: 'pointer',
+            }}
+          >
+            Address : Buon Don ,Tp BMT
+          </Box>
           <Box
             sx={{
               color: '#444655',

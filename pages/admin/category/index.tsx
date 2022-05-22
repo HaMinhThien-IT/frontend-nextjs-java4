@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import AdminLayout from '../../../src/components/layout/AdminLayout';
-import { Box } from '@mui/material';
+import { Box, Stack, TextField } from '@mui/material';
 import ModalCate from './components/ModalCate';
 import { categoryController } from '../../../src/controller/CategoryController';
 import { Category } from '../../../src/model/Category';
@@ -67,7 +67,7 @@ export default function ListCaregory() {
 
     if (cate.idCategory > 1) {
       categoryController.editUser(cate).then(() => {
-        toast.success('Sửa user thành công', {
+        toast.success('Sửa category thành công', {
           position: 'top-center',
           autoClose: 3000,
         });
@@ -76,7 +76,7 @@ export default function ListCaregory() {
       });
     } else {
       categoryController.addNewCate(cate).then(() => {
-        toast.success('Thêm user thành công', {
+        toast.success('Thêm category thành công', {
           position: 'top-center',
           autoClose: 3000,
         });
@@ -90,47 +90,71 @@ export default function ListCaregory() {
   };
   const onDelete = (idCategory: number) => {
     categoryController.deleteCourseById(idCategory).then(() => {
-      toast.success('Xóa user thành công', {
+      toast.success('Xóa category thành công', {
         position: 'top-center',
         autoClose: 3000,
       });
       getListCategory();
     });
   };
+  const onSearch = (e: any) => {
+    if (e.target.value) {
+      categoryController.searchByName(e.target.value).then((res) => {
+        setState({ ...state, category: res });
+      });
+    } else {
+      getListCategory();
+    }
+  };
   return (
     <Box>
-      <ModalCate
-        dataEdit={state.categoryEdit}
-        onAdd={onAdd}
-        open={open}
-        handleClose={handleClose}
-        handleOpen={handleOpen}
-        key={new Date().getTime()}
-      />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Id</StyledTableCell>
-              <StyledTableCell align="left">Name</StyledTableCell>
-              <StyledTableCell align="left">Image</StyledTableCell>
-              <StyledTableCell align="left">Decs</StyledTableCell>
-              <StyledTableCell align="left">Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {state.category.map((row) => (
-              <CategoryItem
-                onDelete={onDelete}
-                onOpen={handleOpen}
-                onSetData={onSetData}
-                key={row.idCategory}
-                category={row}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Stack direction={'row'} justifyContent="flex-start" alignContent={'center'} spacing={3}>
+        <ModalCate
+          dataEdit={state.categoryEdit}
+          onAdd={onAdd}
+          open={open}
+          handleClose={handleClose}
+          handleOpen={handleOpen}
+          key={new Date().getTime()}
+        />
+        <TextField
+          sx={{
+            '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': {
+              padding: '8px',
+            },
+          }}
+          onChange={(e) => onSearch(e)}
+          placeholder="Search by name"
+        />
+      </Stack>
+      {state.category.length == 0 ? (
+        <Box>Null</Box>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Id</StyledTableCell>
+                <StyledTableCell align="left">Name</StyledTableCell>
+                <StyledTableCell align="left">Image</StyledTableCell>
+                <StyledTableCell align="left">Decs</StyledTableCell>
+                <StyledTableCell align="left">Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {state.category.map((row) => (
+                <CategoryItem
+                  onDelete={onDelete}
+                  onOpen={handleOpen}
+                  onSetData={onSetData}
+                  key={row.idCategory}
+                  category={row}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 }

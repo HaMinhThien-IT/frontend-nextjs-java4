@@ -7,6 +7,11 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Category } from '../../../../src/model/Category';
 import { FormHelperText, Stack, TextField } from '@mui/material';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
+import { schema } from '../../../../src/helper/yup';
+import { prependOnceListener } from 'process';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -37,26 +42,16 @@ export default function ModalCate(props: Props) {
     errorMessage: '',
     errorStatus: false,
   });
-  const onValidate = (category: Category) => {
-    if (category.name.length <= 5) {
-      setState({
-        ...state,
-        errorMessage: 'Trường name bắt buộc lớn hơn 5 kì tự và nhỏ hơn 50 kí tự',
-        errorStatus: true,
-      });
-    } else {
-      if (category.image.length <= 5) {
-        setState({
-          ...state,
-          errorMessage: 'Trường Image bắt buộc lớn hơn 5 kì tự và nhỏ hơn 50 kí tự',
-          errorStatus: true,
-        });
-      } else {
-        setState({ ...state, errorMessage: '', errorStatus: false });
-        props.onAdd(state.category);
-      }
-    }
-  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isDirty, isValid },
+    reset,
+  } = useForm({
+    mode: 'all',
+    resolver: yupResolver(schema),
+  });
+  const check = !!props.dataEdit.idCategory;
   return (
     <div>
       <Box mb={1}>
@@ -80,42 +75,79 @@ export default function ModalCate(props: Props) {
             <Typography id="transition-modal-title" variant="h6" component="h2">
               Add new category
             </Typography>
-            <TextField
-              style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
-              id="outlined-size-small"
-              size="small"
-              placeholder="Name ..."
-              value={state.category.name}
-              onChange={(e) => setState({ ...state, category: { ...state.category, name: e.target.value } })}
-            />
-            <TextField
-              style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
-              id="outlined-size-small"
-              size="small"
-              placeholder="Image ..."
-              value={state.category.image}
-              onChange={(e) => setState({ ...state, category: { ...state.category, image: e.target.value } })}
-            />
-            <TextField
-              style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
-              id="outlined-size-small"
-              size="small"
-              placeholder="Description ..."
-              value={state.category.descriptionCate}
-              onChange={(e) => setState({ ...state, category: { ...state.category, descriptionCate: e.target.value } })}
-            />
-            <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
-              <Box>
-                <FormHelperText sx={{ marginLeft: '0', fontSize: '12px' }} error id="accountId-error">
-                  {state.errorMessage}
-                </FormHelperText>
-              </Box>
 
-              <Button
-                // disabled={state.errorStatus || state.category.name == undefined || state.category.image == undefined}
-                onClick={() => onValidate(state.category)}
-                variant="outlined"
-              >
+            <Controller
+              name="fullName"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <TextField
+                    {...field}
+                    style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
+                    id="outlined-size-small"
+                    size="small"
+                    required
+                    error={!!errors.fullName?.message}
+                    helperText={errors.fullName?.message}
+                    placeholder="Name ..."
+                    value={state.category.name}
+                    onChange={(e) => {
+                      setState({ ...state, category: { ...state.category, name: e.target.value } });
+                      field.onChange(e);
+                    }}
+                  />
+                </>
+              )}
+            />
+            <Controller
+              name="image"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <TextField
+                    {...field}
+                    style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
+                    id="outlined-size-small"
+                    size="small"
+                    required
+                    error={!!errors.image?.message}
+                    helperText={errors.image?.message}
+                    placeholder="Image ..."
+                    value={state.category.image}
+                    onChange={(e) => {
+                      setState({ ...state, category: { ...state.category, image: e.target.value } });
+                      field.onChange(e);
+                    }}
+                  />
+                </>
+              )}
+            />
+            <Controller
+              name="desc"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <TextField
+                    {...field}
+                    style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
+                    id="outlined-size-small"
+                    size="small"
+                    required
+                    error={!!errors.desc?.message}
+                    helperText={errors.desc?.message}
+                    placeholder="Description ..."
+                    value={state.category.descriptionCate}
+                    onChange={(e) => {
+                      setState({ ...state, category: { ...state.category, descriptionCate: e.target.value } });
+                      field.onChange(e);
+                    }}
+                  />
+                </>
+              )}
+            />
+
+            <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
+              <Button onClick={() => props.onAdd(state.category)} variant="outlined">
                 Add new
               </Button>
             </Stack>

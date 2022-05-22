@@ -7,6 +7,11 @@ class CategoryController {
       return res.data;
     });
   }
+  searchByName(name: string) {
+    return axios.get(`${localHost}/search/${name}`).then((res) => {
+      return res.data;
+    });
+  }
   addNewCate(cate: Category) {
     return axios.post(`${localHost}/category`, cate).then((res) => {
       return res.data;

@@ -33,13 +33,13 @@ export default function CategoryItem(props: Props) {
   return (
     <StyledTableRow key={props.category.idCategory}>
       <StyledTableCell>{props.category.idCategory}</StyledTableCell>
-      <StyledTableCell align="right"> {props.category.name}</StyledTableCell>
-      <StyledTableCell align="right">
+      <StyledTableCell align="left"> {props.category.name}</StyledTableCell>
+      <StyledTableCell align="left">
         {' '}
         <img src={props.category.image} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
       </StyledTableCell>
-      <StyledTableCell align="right"> {props.category.descriptionCate}</StyledTableCell>
-      <StyledTableCell align="right">
+      <StyledTableCell align="left"> {props.category.descriptionCate}</StyledTableCell>
+      <StyledTableCell align="left">
         <IoMdRemoveCircleOutline
           onClick={() => {
             props.onDelete(props.category.idCategory);
