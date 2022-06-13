@@ -6,6 +6,9 @@ import { authController } from '../../src/controller/AuthController';
 import { User } from '../../src/model/User';
 import { useRouter } from 'next/router';
 import { authContext } from '../../src/store/Auth';
+import { toast } from 'react-toastify';
+import { useModal } from '../../src/hook/useModal';
+import ModalLogin from './components/Modal';
 type State = {
   email: string;
   password: string;
@@ -38,7 +41,7 @@ export default function Login() {
         onGetMe();
         router.push('/');
       } else {
-        console.log('sai roi');
+        toast.error('Sai tài khoản hoặc mật khẩu!!');
       }
     });
   };
@@ -50,66 +53,73 @@ export default function Login() {
       router.push('/');
     }
   }, [getMe]);
+  const { open, handleClose, handleOpen } = useModal();
   return (
-    <AuthComponent
-      linked="register"
-      event={login}
-      title=" Đăng ký tài khoản với F8"
-      loginChua={
-        <Box sx={{ color: '#000000', lineHeight: '25px', fontSize: '14px', fontWeight: 400, marginTop: '10px' }}>
-          Bạn chưa có tài khoản?{' '}
-          <span
-            style={{
-              color: '#F47723',
-              lineHeight: '25px',
-              fontSize: '14px',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            Đăng kí
-          </span>
-        </Box>
-      }
-      stackProps={
-        <>
-          <Stack
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            spacing={2}
-            sx={{ border: '2px solid #ddd', padding: '10px 16px', borderRadius: '20px', marginBottom: '14px' }}
-          >
-            <img
-              src="https://accounts.fullstack.edu.vn/assets/images/signin/personal-18px.svg"
-              style={{ width: '20px' }}
-              alt=""
-            />
-            <input
-              onChange={(e) => setState({ ...state, email: e.target.value })}
-              type="text"
-              style={{ outline: 'none', border: 'none', width: '100%' }}
-              placeholder="Email ..."
-            />
-          </Stack>
-          <Stack
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            spacing={2}
-            sx={{ border: '2px solid #ddd', padding: '10px 16px', borderRadius: '20px', marginBottom: '14px' }}
-          >
-            <CgPassword fontSize={'20px'} color="rgb(117,117,117)" />
-            <input
-              onChange={(e) => setState({ ...state, password: e.target.value })}
-              type="text"
-              style={{ outline: 'none', border: 'none', width: '100%' }}
-              placeholder="Password ..."
-            />
-          </Stack>
-        </>
-      }
-      button={'Đăng nhập'}
-    />
+    <Box>
+      <AuthComponent
+        linked="register"
+        eventPassword={handleOpen}
+        event={login}
+        title=" Đăng ký tài khoản với F8"
+        loginChua={
+          <>
+            <Box sx={{ color: '#000000', lineHeight: '25px', fontSize: '14px', fontWeight: 400, marginTop: '10px' }}>
+              Bạn chưa có tài khoản?{' '}
+              <span
+                style={{
+                  color: '#F47723',
+                  lineHeight: '25px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                Đăng kí
+              </span>
+            </Box>
+          </>
+        }
+        stackProps={
+          <>
+            <Stack
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              spacing={2}
+              sx={{ border: '2px solid #ddd', padding: '10px 16px', borderRadius: '20px', marginBottom: '14px' }}
+            >
+              <img
+                src="https://accounts.fullstack.edu.vn/assets/images/signin/personal-18px.svg"
+                style={{ width: '20px' }}
+                alt=""
+              />
+              <input
+                onChange={(e) => setState({ ...state, email: e.target.value })}
+                type="text"
+                style={{ outline: 'none', border: 'none', width: '100%' }}
+                placeholder="Email ..."
+              />
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              spacing={2}
+              sx={{ border: '2px solid #ddd', padding: '10px 16px', borderRadius: '20px', marginBottom: '14px' }}
+            >
+              <CgPassword fontSize={'20px'} color="rgb(117,117,117)" />
+              <input
+                onChange={(e) => setState({ ...state, password: e.target.value })}
+                type="text"
+                style={{ outline: 'none', border: 'none', width: '100%' }}
+                placeholder="Password ..."
+              />
+            </Stack>
+          </>
+        }
+        button={'Đăng nhập'}
+      />
+      <ModalLogin open={open} handleClose={handleClose} handleOpen={handleOpen} />
+    </Box>
   );
 }

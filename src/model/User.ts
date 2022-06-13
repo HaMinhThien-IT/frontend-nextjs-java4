@@ -14,3 +14,7 @@ export interface Users {
   password: string;
   email: string;
 }
+export interface ForgotPassword {
+  email: string;
+  code: number;
+}

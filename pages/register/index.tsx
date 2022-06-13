@@ -16,25 +16,26 @@ export default function Register() {
   const router = useRouter();
   const [state, setState] = useState<State>({ user: {} as User, loading: false });
   const register = () => {
-    if (state.user.email.length < 1 || state.user.password.length < 1) {
-      toast.error('Vui lòng nhập đủ tất cả trường !!!', {
-        position: 'top-right',
-        autoClose: 3000,
-      });
-    } else {
-      authController
-        .register(state.user)
-        .then(() => {
-          toast.success('Đăng ký tài khoản thành công !', {
-            position: 'top-right',
-            autoClose: 3000,
-          });
-        })
-        .then(() => {
-          setState({ ...state, loading: true });
-          router.push('/login');
+    authController.register(state.user).then((res) => {
+      console.log(res);
+
+      if (res == 401) {
+        toast.error('Email đã tồn tại !', {
+          position: 'top-right',
+          autoClose: 3000,
         });
-    }
+      } else {
+        toast.success('Đăng ký tài khoản thành công !', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+        router.push('/login');
+      }
+    });
+    // .then(() => {
+    //   setState({ ...state, loading: true });
+    //   router.push('/login');
+    // });
   };
   useEffect(() => {
     if (getMe.idUser < 1) {

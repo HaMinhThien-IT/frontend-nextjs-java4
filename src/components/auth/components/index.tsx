@@ -1,6 +1,7 @@
 import { Box, BoxProps, Grid, Stack, StackProps } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { type } from 'os';
 import React from 'react';
 import { CgPassword } from 'react-icons/cg';
@@ -12,8 +13,12 @@ type props = {
   button: string;
   event: () => void;
   linked: string;
+  eventPassword?: () => void;
 };
 export default function AuthComponent(props: props) {
+  const router = useRouter();
+  console.log(router.asPath);
+
   return (
     <Stack
       direction={'row'}
@@ -81,6 +86,25 @@ export default function AuthComponent(props: props) {
               <a>{props.loginChua}</a>
             </Link>
           </Stack>
+          {router.asPath == '/login' && (
+            <Stack direction="row" justifyContent="center" alignItems="center">
+              <Box sx={{ color: '#000000', lineHeight: '25px', fontSize: '14px', fontWeight: 400 }}>
+                Bạn quên mật khẩu ư ?{' '}
+                <span
+                  onClick={props.eventPassword}
+                  style={{
+                    color: '#F47723',
+                    lineHeight: '25px',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Click me !
+                </span>
+              </Box>
+            </Stack>
+          )}
         </Grid>
       </Grid>
     </Stack>

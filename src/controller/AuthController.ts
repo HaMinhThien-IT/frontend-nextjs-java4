@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { User } from '../model/User';
+import { ForgotPassword, User } from '../model/User';
 let localHost: string = 'http://localhost:8080';
-
 class AuthController {
   login(email: string, password: string) {
     return axios.post(`${localHost}/login`, { email, password }).then((res) => {
@@ -29,6 +28,23 @@ class AuthController {
   }
   deleteCourseById(idUser: Number) {
     return axios.delete(`${localHost}/user/${idUser}`);
+  }
+  forGotPassword(forgot: ForgotPassword) {
+    return axios.post(`${localHost}/forgot`, forgot).then((res) => {
+      return res.data;
+    });
+  }
+  checkForgotPassword(code: number) {
+    return axios.get(`${localHost}/fotGot/${code}`).then((res) => {
+      return res.data;
+    });
+  }
+  forGotNewPassword(email: string, password: string) {
+    console.log(password);
+
+    return axios.get(`${localHost}/forgot/${email}/${password}`).then((res) => {
+      return res.data;
+    });
   }
 }
 export const authController = new AuthController();

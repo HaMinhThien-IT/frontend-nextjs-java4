@@ -11,10 +11,21 @@ class PostController {
       return res.data;
     });
   }
-  listOrderById(idPost: number) {
+  getListPostById(id: number) {
+    return axios.get(`${localHost}/postById/${id}`).then((res) => {
+      return res.data;
+    });
+  }
+  postById(idPost: number) {
     return axios.get(`${localHost}/post/${idPost}`).then((res) => {
       return res.data;
     });
+  }
+  deleteById(idPost: Number) {
+    return axios.delete(`${localHost}/removePost/${idPost}`);
+  }
+  editPost(post: Post) {
+    return axios.put(`${localHost}/post/${post.idPost}`, post);
   }
 }
 export const postController = new PostController();

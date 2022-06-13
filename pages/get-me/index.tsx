@@ -7,6 +7,8 @@ import { authContext } from '../../src/store/Auth';
 
 export default function GetMe() {
   const { getMe } = useContext(authContext);
+  console.log(getMe);
+
   return (
     <Grid pt={2} container direction="row" justifyContent="space-between" alignItems="flex-start">
       <Grid
@@ -114,81 +116,36 @@ export default function GetMe() {
         >
           Quản lý thông tin hồ sơ để bảo mật tài khoản
         </Box>
-        <Stack
-          sx={{ borderTop: '1px solid #ddd' }}
-          mt={2}
-          // direction="column"
-          // justifyContent="center"
-          // alignItems="center"
-          spacing={2}
-        >
-          <Box
-            sx={{
-              color: '#444655',
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
-              cursor: 'pointer',
-            }}
-          >
-            ID : {getMe.idUser}
-          </Box>
-          <Box
-            sx={{
-              color: '#444655',
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
-              cursor: 'pointer',
-            }}
-          >
-            Email : {getMe.email}
-          </Box>
-          <Box
-            sx={{
-              color: '#444655',
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
-              cursor: 'pointer',
-            }}
-          >
-            Full name : {getMe.name}
-          </Box>
-          <Box
-            sx={{
-              color: '#444655',
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
-              cursor: 'pointer',
-            }}
-          >
-            Birth day : 02/02/2002
-          </Box>
-          <Box
-            sx={{
-              color: '#444655',
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
-              cursor: 'pointer',
-            }}
-          >
-            Address : Buon Don ,Tp BMT
-          </Box>
-          <Box
-            sx={{
-              color: '#444655',
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
-              cursor: 'pointer',
-            }}
-          >
-            Role : {getMe.role}
-          </Box>
-        </Stack>
+        <div className="card">
+          <div className="img">
+            <img src={getMe.imgUser} />
+          </div>
+          <div className="infos">
+            <div className="name">
+              <h2>{getMe.name}</h2>
+              <h4>{getMe.email}@gmail.com</h4>
+            </div>
+            <p className="text">I am a Front End Developer, follow me to be the first who see my new work.</p>
+            <ul className="stats">
+              <li>
+                <h3>15K</h3>
+                <h4>Views</h4>
+              </li>
+              <li>
+                <h3>82</h3>
+                <h4>Projects</h4>
+              </li>
+              <li>
+                <h3>1.3M</h3>
+                <h4>Followers</h4>
+              </li>
+            </ul>
+            <div className="links">
+              <button className="follow">Follow</button>
+              <button className="view">View profile</button>
+            </div>
+          </div>
+        </div>
       </Grid>
     </Grid>
   );
