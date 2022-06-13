@@ -51,7 +51,6 @@ export default function ModalCate(props: Props) {
     mode: 'all',
     resolver: yupResolver(schema),
   });
-  const check = !!props.dataEdit.idCategory;
   return (
     <div>
       <Box mb={1}>

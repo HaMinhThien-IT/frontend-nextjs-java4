@@ -15,6 +15,9 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { authController } from '../../../../src/controller/AuthController';
 import { useModal } from '../../../../src/hook/useModal';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -27,13 +30,6 @@ const style = {
   p: 4,
 };
 
-interface Test {
-  user: User;
-}
-interface IFormInputs {
-  test: Test;
-}
-
 interface State {
   user: User;
 }
@@ -44,23 +40,37 @@ type Props = {
   handleClose: () => void;
   dataEdit: User;
 };
+
+export const schema = yup
+  .object({
+    email: yup.string().email('Please enter a valid email address!').required('You must enter your email address!'),
+    fullName: yup.string().required('You must enter your name!'),
+    image: yup.string().required('You must enter your image!'),
+    password: yup.string().required('You must enter your name!'),
+  })
+  .required();
+
 export default function ModalUser(props: Props) {
   const {
-    handleSubmit,
     control,
+    handleSubmit,
+    formState: { errors, isDirty, isValid },
     reset,
-    getValues,
-    formState: { errors },
-  } = useForm<IFormInputs>();
-  const [state, setSate] = React.useState<State>({
-    user: props.dataEdit,
+    resetField,
+  } = useForm({
+    mode: 'all',
+    resolver: yupResolver(schema),
   });
-
-  const onSubmit: SubmitHandler<IFormInputs> = (data) => {
-    setSate({ ...state, user: data.test.user });
-    props.onAdd(data.test.user);
-  };
-
+  const [user, setUser] = React.useState<User>(props.dataEdit);
+  React.useEffect(() => {
+    console.log('h', user);
+    if (user.idUser) {
+      resetField('email', { defaultValue: user.email });
+      resetField('fullName', { defaultValue: user.name });
+      resetField('password', { defaultValue: user.password });
+      resetField('image', { defaultValue: user.imgUser });
+    }
+  }, [user.idUser]);
   return (
     <Box mb={1}>
       <Button variant="contained" onClick={() => props.handleOpen()}>
@@ -79,99 +89,107 @@ export default function ModalUser(props: Props) {
       >
         <Fade in={props.open}>
           <Box sx={style}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Box>
-                <Typography>Add new user</Typography>
-                <Controller
-                  name="test.user.name"
-                  control={control}
-                  defaultValue={''}
-                  rules={rules.name}
-                  render={({ field }) => (
+            <Box>
+              <Typography>Add new user</Typography>
+              <Controller
+                name="fullName"
+                control={control}
+                render={({ field }) => (
+                  <>
                     <TextField
+                      {...field}
                       style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
                       id="outlined-size-small"
                       size="small"
+                      required
+                      error={!!errors.fullName?.message}
+                      helperText={errors.fullName?.message}
                       placeholder="Name ..."
-                      {...field}
+                      value={user.name}
+                      onChange={(e) => {
+                        setUser({ ...user, name: e.target.value });
+                        field.onChange(e);
+                      }}
                     />
-                  )}
-                />
+                  </>
+                )}
+              />
 
-                <MessError mess={errors.test?.user?.name?.message} />
-                <Controller
-                  name="test.user.email"
-                  control={control}
-                  defaultValue={''}
-                  rules={rules.email}
-                  render={({ field }) => (
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <>
                     <TextField
+                      {...field}
                       style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
                       id="outlined-size-small"
                       size="small"
+                      required
+                      error={!!errors.email?.message}
+                      helperText={errors.email?.message}
                       placeholder="Email ..."
-                      {...field}
-                      value={state.user.email}
+                      value={user.email}
+                      onChange={(e) => {
+                        setUser({ ...user, email: e.target.value });
+                        field.onChange(e);
+                      }}
                     />
-                  )}
-                />
-                <MessError mess={errors.test?.user?.email?.message} />
-                <Controller
-                  name="test.user.imgUser"
-                  control={control}
-                  defaultValue={''}
-                  rules={rules.image}
-                  render={({ field }) => (
+                  </>
+                )}
+              />
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <>
                     <TextField
+                      {...field}
                       style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
                       id="outlined-size-small"
                       size="small"
+                      required
+                      error={!!errors.image?.message}
+                      helperText={errors.image?.message}
                       placeholder="Image ..."
-                      {...field}
-                      value={state.user.imgUser}
+                      value={user.imgUser}
+                      onChange={(e) => {
+                        setUser({ ...user, imgUser: e.target.value });
+                        field.onChange(e);
+                      }}
                     />
-                  )}
-                />
-                <MessError mess={errors.test?.user?.imgUser?.message} />
+                  </>
+                )}
+              />
 
-                <Box>
-                  <Controller
-                    name="test.user.password"
-                    control={control}
-                    defaultValue={''}
-                    rules={rules.password}
-                    render={({ field }) => (
-                      <TextField
-                        style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
-                        id="outlined-size-small"
-                        size="small"
-                        placeholder="Password ..."
-                        {...field}
-                        value={state.user.password}
-                      />
-                    )}
-                  />
-                  <MessError mess={errors.test?.user?.password?.message} />
-                </Box>
-                <button
-                  // onClick={() => props.onAdd(state.user)}
-                  style={{
-                    padding: '10px 16px',
-                    width: '100%',
-                    marginTop: '10px',
-                    backgroundImage: 'linear-gradient(68.4deg,rgba(99, 251, 215, 1) -0.4%,rgba(5, 222, 250, 1) 100.2%)',
-                    outline: 'none',
-                    border: '1px solid #ddd',
-                    borderRadius: '3px',
-                    color: 'blue',
-                    fontWeight: 600,
-                  }}
-                  type="submit"
-                >
-                  Add new
-                </button>
-              </Box>
-            </form>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <TextField
+                      {...field}
+                      style={{ marginTop: '10px', width: '100%', marginBottom: '10px' }}
+                      id="outlined-size-small"
+                      size="small"
+                      required
+                      error={!!errors.password?.message}
+                      helperText={errors.password?.message}
+                      placeholder="Password ..."
+                      value={user.password}
+                      onChange={(e) => {
+                        setUser({ ...user, password: e.target.value });
+                        field.onChange(e);
+                      }}
+                    />
+                  </>
+                )}
+              />
+              <Button fullWidth variant="contained" onClick={() => props.onAdd(user)}>
+                {' '}
+                Add new
+              </Button>
+            </Box>
           </Box>
         </Fade>
       </Modal>

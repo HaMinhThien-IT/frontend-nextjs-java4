@@ -20,6 +20,8 @@ import { useRouter } from 'next/router';
 import { Post } from '../../model/Post';
 import { postController } from '../../controller/PostController';
 import { toast } from 'react-toastify';
+import { postContext } from '../../store/Post';
+import { searchContext } from '../../store/SearchHeader';
 
 type Props = {};
 type State = {
@@ -38,30 +40,31 @@ export default function Header({}: Props) {
   };
   const { listCart } = useContext(cartContext);
   const { getMe, onGetMe } = useContext(authContext);
+  const { getDataSearch } = useContext(searchContext);
+
   const logout = () => {
     localStorage.removeItem('user');
     onGetMe();
     router.push('/');
   };
-  const onNewPost = () => {
-    const postTemp: Post = {
-      idPost: 0,
-      idUser: String(getMe.idUser),
-      content: JSON.stringify(localStorage.getItem('content')),
-      image: '',
-      date: '',
-    };
-    postController.addNewPost(postTemp).then(() => {
-      getListPost();
-      toast.success('Đăng bài thành công ', {
-        position: 'top-right',
-        autoClose: 3000,
-      });
-      router.push('/');
-    });
-  };
-  console.log(state.post);
-
+  // const onNewPost = () => {
+  //   const postTemp: Post = {
+  //     idPost: 0,
+  //     idUser: getMe.idUser,
+  //     content: JSON.stringify(localStorage.getItem('content')),
+  //     image: '',
+  //     date: '',
+  //   };
+  //   postController.addNewPost(postTemp).then(() => {
+  //     getListPost();
+  //     toast.success('Đăng bài thành công ', {
+  //       position: 'top-right',
+  //       autoClose: 3000,
+  //     });
+  //     router.push('/');
+  //   });
+  // };
+  const [value, setValue] = useState('');
   useEffect(() => {
     getListPost();
   }, []);
@@ -115,10 +118,11 @@ export default function Header({}: Props) {
             justifyContent="flex-start"
             alignItems="center"
           >
-            <FiSearch fontSize={'20px'} />
+            <FiSearch onClick={() => getDataSearch(value)} fontSize={'20px'} />
             <input
               style={{ border: 0, outline: 0, width: '100%' }}
               placeholder="Tìm kiếm khóa học, bài viết , video ..."
+              onChange={(e) => setValue(e.target.value)}
             ></input>
           </Stack>
         )}
@@ -129,7 +133,7 @@ export default function Header({}: Props) {
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
               {router.pathname == '/post' ? (
                 <button
-                  onClick={() => onNewPost()}
+                  // onClick={() => onNewPost()}
                   style={{
                     marginRight: '10px',
                     border: 'none',

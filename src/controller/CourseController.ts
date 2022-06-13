@@ -22,5 +22,10 @@ class CourseController {
       return res.data;
     });
   }
+  searchByName(name: string) {
+    return axios.get(`${localHost}/courses/${name}`).then((res) => {
+      return res.data;
+    });
+  }
 }
 export const courseController = new CourseController();

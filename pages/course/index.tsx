@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import UserLayout from '../../src/components/layout-user/UserLayout';
 import SlideHome from '../../src/components/slider/SlideHome';
 import { courseController } from '../../src/controller/CourseController';
@@ -8,6 +8,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { Box, Stack } from '@mui/material';
 import { Category } from '../../src/model/Category';
 import { categoryController } from '../../src/controller/CategoryController';
+import { searchContext } from '../../src/store/SearchHeader';
 type Props = {};
 type State = {
   course: Course[];
@@ -24,6 +25,21 @@ export default function HomePage({}: Props) {
       setState({ ...state, course: res, cate: dataTemp });
     });
   }, []);
+  const { searchValue } = useContext(searchContext);
+  useEffect(() => {
+    if (searchValue != null || searchValue != undefined) {
+      courseController.searchByName(searchValue).then((res) => {
+        setState({ ...state, course: res });
+      });
+      console.log('search');
+    } else {
+      courseController.getListCourse().then((res) => {
+        setState({ ...state, course: res });
+      });
+      console.log('list');
+    }
+  }, [searchValue]);
+  console.log(searchValue);
   return (
     <Box pt={1} pl={5} pb={5} pr={5}>
       <Box
